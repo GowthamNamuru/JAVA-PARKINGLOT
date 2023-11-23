@@ -1,21 +1,36 @@
 package parkinglot.strategies.spotassignment;
 
-import parkinglot.models.Gate;
-import parkinglot.models.ParkingSpot;
-import parkinglot.models.VehicleType;
-import parkinglot.ticketRepository.ParkingSpotRepository;
+import parkinglot.models.*;
+import parkinglot.services.ParkingLotService;
+import parkinglot.services.ParkingSpotService;
+import parkinglot.ticketRepository.ParkingLotRepository;
+
+import java.util.List;
 
 public class RandomSpotAssignmentStrategy implements SpotAssignmentStrategy {
 
-    private ParkingSpotRepository parkingSpotRepository;
+    private ParkingLotService parkingLotService;
+    private ParkingSpotService parkingSpotService;
 
-    public RandomSpotAssignmentStrategy(ParkingSpotRepository parkingSpotRepository) {
-        this.parkingSpotRepository = parkingSpotRepository;
+    private ParkingLotRepository parkingSpotRepository;
+
+    public RandomSpotAssignmentStrategy(ParkingLotService parkingLotService,
+                                        ParkingSpotService parkingSpotService) {
+        this.parkingLotService = parkingLotService;
+        this.parkingSpotService = parkingSpotService;
     }
 
     @Override
     public ParkingSpot assignSpot(VehicleType vehicleType, Gate gate) {
-        ParkingSpot parkingSpot = new ParkingSpot();
-        return parkingSpot;
+        ParkingLot parkingLot = parkingLotService.getParkingLotForGate(gate);
+        List<ParkingSpot> parkingSpots = parkingSpotService.getParkingSpotByLot(parkingLot);
+
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            if (parkingSpot.getParkingSpotStatus().equals(ParkingSpotStatus.AVAILABLE) &&
+                    parkingSpot.getSupportedVehicleType().contains(vehicleType)) {
+                return parkingSpot;
+            }
+        }
+        return null;
     }
 }

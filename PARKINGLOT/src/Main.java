@@ -2,16 +2,13 @@ import parkinglot.ObjectRegistry;
 import parkinglot.controllers.TicketController;
 import parkinglot.dto.GenerateTicketRequestDto;
 import parkinglot.dto.GenerateTicketResponseDto;
-import parkinglot.models.Gate;
 import parkinglot.models.ResponseStatus;
 import parkinglot.models.Ticket;
 import parkinglot.models.VehicleType;
-import parkinglot.services.GateService;
-import parkinglot.services.TicketService;
-import parkinglot.services.VehicleService;
+import parkinglot.services.*;
 import parkinglot.strategies.spotassignment.RandomSpotAssignmentStrategy;
 import parkinglot.strategies.spotassignment.SpotAssignmentStrategy;
-import parkinglot.ticketRepository.ParkingSpotRepository;
+import parkinglot.ticketRepository.ParkingLotRepository;
 import parkinglot.ticketRepository.TicketRepository;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -21,8 +18,10 @@ public class Main {
         VehicleService vehicleService = new VehicleService();
         GateService gateService = new GateService();
         TicketRepository ticketRepository = new TicketRepository();
-        ParkingSpotRepository parkingSpotRepository = new ParkingSpotRepository();
-        SpotAssignmentStrategy spotAssignmentStrategy = new RandomSpotAssignmentStrategy(parkingSpotRepository);
+        ParkingLotRepository parkingSpotRepository = new ParkingLotRepository();
+        ParkingLotService parkingLotService = new ParkingLotService(parkingSpotRepository);
+        ParkingSpotService parkingSpotService = new ParkingSpotService();
+        SpotAssignmentStrategy spotAssignmentStrategy = new RandomSpotAssignmentStrategy(parkingLotService, parkingSpotService);
 
         TicketService ticketService = new TicketService(vehicleService, gateService, spotAssignmentStrategy, ticketRepository);
 

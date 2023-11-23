@@ -3,16 +3,25 @@ package parkinglot.models;
 import java.util.Date;
 
 public class Ticket extends BaseEntity {
-    private long entryTime;
+    private Date entryTime;
     private Operator operator;
     private Gate gate;
     private  ParkingSpot parkingSpot;
+    private Vehicle vehicle;
 
-    public long getEntryTime() {
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public Date getEntryTime() {
         return entryTime;
     }
 
-    public void setEntryTime(long entryTime) {
+    public void setEntryTime(Date entryTime) {
         this.entryTime = entryTime;
     }
 
